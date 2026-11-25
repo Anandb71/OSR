@@ -93,7 +93,7 @@ export const CONFIG_META: Record<string, ConfigMeta> = {
   // OpenAI
   'openlist.openai.apikey': { type: 'password', hint: 'OpenAI API Key' },
   'openlist.openai.endpoint': { type: 'text', hint: 'OpenAI 接口地址，默认 https://api.openai.com' },
-  'openlist.openai.model': { type: 'text', hint: 'OpenAI 模型名称，例如 gpt-5-mini' },
+  'openlist.openai.model': { type: 'text', hint: 'OpenAI 模型名称，留空默认 gpt-6.1-terra' },
   'openlist.openai.pt-title-fallback': { type: 'switch', hint: '本地解析不出的 PT 种子标题交给 AI 兜底。后台排队、结果缓存，不拖慢 RSS 与补搜，下次搜到同一个种子时生效' },
   // PT 订阅
   'openlist.pt.health.autosearch': { type: 'switch', hint: '每天缺集体检时，对播出多日仍缺集、却没开自动补搜的订阅自动打开补搜。补齐后（订阅完结，或 7 天内既无缺集也无新下载）自动关掉；只关它自己打开的，手动开过的不动' },

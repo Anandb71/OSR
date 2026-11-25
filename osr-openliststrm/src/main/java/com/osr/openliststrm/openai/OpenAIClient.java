@@ -3,6 +3,7 @@ package com.osr.openliststrm.openai;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.osr.common.utils.spring.SpringUtils;
 import com.osr.openliststrm.rename.model.MediaInfo;
+import okhttp3.HttpUrl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OpenAIClient {
     private static final Logger log = LoggerFactory.getLogger(OpenAIClient.class);
-    private static final String DEFAULT_MODEL = "gpt-5.6-terra";
+    static final String DEFAULT_MODEL = "gpt-6.1-terra";
     private static final String DEFAULT_ENDPOINT = "https://api.openai.com";
 
     private final String apiKey;
@@ -38,13 +39,20 @@ public class OpenAIClient {
             if (envModel != null && !envModel.trim().isEmpty()) chosenModel = envModel.trim();
             else chosenModel = DEFAULT_MODEL;
         }
-        this.model = chosenModel;
         this.endpoint = buildEndpoint(endpoint);
+        // 兼容初始数据和旧配置；自定义服务的模型映射由用户管理。
+        HttpUrl configuredUrl = HttpUrl.parse(this.endpoint);
+        boolean officialEndpoint = HttpUrl.get(DEFAULT_ENDPOINT).equals(configuredUrl);
+        if (officialEndpoint && ("gpt-5-mini".equals(chosenModel)
+                || "gpt-5-mini-2025-08-07".equals(chosenModel))) {
+            chosenModel = DEFAULT_MODEL;
+        }
+        this.model = chosenModel;
     }
 
     private String buildEndpoint(String cfg) {
         if (cfg == null || cfg.trim().isEmpty()) return DEFAULT_ENDPOINT;
-        String t = cfg.trim();
+        String t = cfg.trim().replaceAll("/+$", "");
         if (t.startsWith("http://") || t.startsWith("https://")) {
             return t;
         }

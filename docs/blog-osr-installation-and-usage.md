@@ -207,7 +207,11 @@ docker cp osr-backend:/data/logs ./tmp
 |---|---|---|
 | `openlist.openai.endpoint` | 官方地址 | 支持任意 OpenAI 兼容端点 |
 | `openlist.openai.apikey` | 空 | |
-| `openlist.openai.model` | `gpt-5-mini` | |
+| `openlist.openai.model` | `gpt-6.1-terra` | 留空时使用此默认值 |
+
+OpenAI 官方接口的默认模型为 `gpt-6.1-terra`。模型优先级为：参数设置 `openlist.openai.model`、环境变量 `OPENAI_MODEL`、内置默认值。官方接口上配置的旧值 `gpt-5-mini` 和 `gpt-5-mini-2025-08-07`（包括数据库初始值）会在请求时自动改用新默认值，不修改已保存的配置；其他模型和自定义接口的模型名保持原值。自定义接口用户应按服务商支持的模型手动配置。旧模型将于 [2026 年 12 月 11 日停用](https://developers.openai.com/api/docs/deprecations)。
+
+请求继续使用 Chat Completions，`gpt-6.1-terra` 使用 `reasoning_effort: none` 和 `max_completion_tokens`，保留原来的温度及回复长度上限。此处只发送文本，不调用工具；若以后增加工具调用，需要迁移到 Responses API。
 
 > 这些参数改完都**不用重启**：TMDb / OpenAI 在每次重命名时实时读取；Telegram Bot 与企业微信的参数保存后自动生效（Telegram 约 2 秒后按新配置重连，v3.4.29 起）。
 

@@ -58,7 +58,7 @@ public class OpenAIApiService {
                 }}
         });
         payload.put("temperature", 0.0);
-        if ("gpt-5.6-terra".equals(model)) {
+        if (OpenAIClient.DEFAULT_MODEL.equals(model) || "gpt-5.6-terra".equals(model)) {
             payload.put("reasoning_effort", "none");
             payload.put("max_completion_tokens", maxTokens);
         } else {
